@@ -1,14 +1,40 @@
 const config = {
-  cols: 100,
-  rows: 100,
-  snakeLen: 5,
+  cols: Math.floor(window.innerWidth / 10),
+  rows: Math.floor(window.innerHeight / 10),
+  snakeLen: 10,
+  points: 0,
+  speed: 5,
   snakeBoard: "snk-brd",
   snakeCls: "snk",
+  snakeFd: "snk-fd",
   snakePartCls: "snk-prt",
   snakeHeadCls: "snk-hd",
+  ptsCount: "pts-count",
+  spdCount: "spd-count",
   snake: null,
+  snakeFood: null,
+  pointsCount: null,
+  snakeFoodPos: [],
   headPos: { col: 0, row: 0, dir: "up" },
   currentPosSet: new Set(),
+  sameDirMap: {
+    up: "-1,0",
+    down: "1,0",
+    left: "0,-1",
+    right: "0,1",
+  },
+  cancelDirMap: {
+    up: "ArrowDown",
+    down: "ArrowUp",
+    left: "ArrowRight",
+    right: "ArrowLeft",
+  },
+  keyCodeToDirMap: {
+    ArrowUp: "up",
+    ArrowDown: "down",
+    ArrowRight: "right",
+    ArrowLeft: "left",
+  },
   posMap: {
     up: {
       "-1,0": "up",
@@ -31,13 +57,36 @@ const config = {
       "1,0": "down",
     },
   },
+  speedIntervals: [5, 10, 15, 20, 25],
 };
 
+function placeSnakeFood() {
+  const { cols, rows, snakeFood } = config;
+  let row = Math.ceil(rows / Math.ceil(Math.random() * 12));
+  let col = Math.ceil(cols / Math.ceil(Math.random() * 12));
+  config.snakeFoodPos = [row, col];
+  snakeFood.style.setProperty("grid-row-start", row);
+  snakeFood.style.setProperty("grid-column-start", col);
+  snakeFood.setAttribute("data-dr", row);
+  snakeFood.setAttribute("data-dc", col);
+}
+
 const snakeBrd = document.querySelector(`.${config.snakeBoard}`);
+const pointsCount = document.querySelector(`.${config.ptsCount}`);
+const speedCount = document.querySelector(`.${config.spdCount}`);
+pointsCount.textContent = config.points;
+speedCount.textContent = config.speed;
 
 function createSnake() {
   const { snakeCls, snakePartCls, snakeHeadCls } = config;
   const snake = [];
+
+  const snakeFood = document.createElement("div");
+  snakeFood.classList.add(config.snakeFd);
+  snakeBrd.appendChild(snakeFood);
+  config.snakeFood = snakeFood;
+  placeSnakeFood();
+
   const head = document.createElement("div");
   head.classList.add(snakeCls);
   head.classList.add(snakeHeadCls);
@@ -83,62 +132,60 @@ function setup() {
 }
 
 function handleKeyPress(event) {
-  switch (event.code) {
-    // up
-    case 38: {
-      config.headPos.dir = "up";
-      return;
+  const { headPos, keyCodeToDirMap, cancelDirMap } = config;
+  if (!keyCodeToDirMap[event.code]) return;
+  const { dir: currentDir } = headPos;
+  if (event.code === cancelDirMap[currentDir]) return;
+  headPos.dir = keyCodeToDirMap[event.code];
+}
+
+document.body.addEventListener("keydown", handleKeyPress);
+
+function handleEat() {
+  placeSnakeFood();
+  config.points += 1;
+  pointsCount.textContent = config.points;
+  // add one more snake part
+  if (config.points % 2 === 0) {
+    const div = document.createElement("div");
+    div.classList.add(config.snakeCls);
+    div.classList.add(config.snakePartCls);
+    config.snake.push(div);
+    snakeBrd.appendChild(div);
+  }
+  if (config.speed > 1) {
+    const pts = config.points;
+    console.log(pts);
+    if (pts > config.speedIntervals[3]) {
+      config.speed = 1;
+    } else if (pts > config.speedIntervals[2]) {
+      config.speed = 2;
+    } else if (pts > config.speedIntervals[1]) {
+      config.speed = 3;
+    } else if (pts > config.speedIntervals[0]) {
+      config.speed = 4;
     }
-    // right
-    case 39: {
-      config.headPos.dir = "right";
-      return;
-    }
-    // down
-    case 40: {
-      config.headPos.dir = "down";
-      return;
-    }
-    // left
-    case 37: {
-      config.headPos.dir = "left";
-      return;
-    }
+    speedCount.textContent = config.speed;
   }
 }
 
 function getNextHeadOffset() {
-  const { headPos, cols, rows, posMap } = config;
+  const { headPos, cols, rows, posMap, sameDirMap, currentPosSet } = config;
   const { dir, col, row } = headPos;
-  let possiblePos = config.posMap[dir];
-  possiblePos = Object.keys(possiblePos).map((pos) =>
-    pos.split(",").map((n) => parseInt(n))
-  );
+  let [nextRow, nextCol] = sameDirMap[dir].split(",").map((n) => parseInt(n));
 
-  possiblePos = possiblePos.filter((pos) => {
-    const nextRow = pos[0] + row;
-    const nextCol = pos[1] + col;
-    return !config.currentPosSet.has(`${nextRow},${nextCol}`);
-  });
-
-  if (!possiblePos.length) {
-    return;
-  }
-
-  let [nextRow, nextCol] = possiblePos.at(
-    Math.floor(Math.random() * possiblePos.length)
-  );
-
-  const nextDir = posMap[dir][[nextRow, nextCol].join()];
   nextRow = nextRow + row;
   nextCol = nextCol + col;
 
+  // break
+  if (currentPosSet.has(`${nextRow},${nextCol}`)) return;
+
   if (nextCol > cols) nextCol = 0;
-  if (nextCol < 0) nextCol = cols - 1;
-  if (nextRow < 0) nextRow = rows - 1;
+  if (nextCol < 0) nextCol = cols;
+  if (nextRow < 0) nextRow = rows;
   if (nextRow > rows) nextRow = 0;
 
-  const nextPos = { row: nextRow, col: nextCol, dir: nextDir };
+  const nextPos = { row: nextRow, col: nextCol };
 
   config.headPos = { ...config.headPos, ...nextPos };
 
@@ -147,11 +194,11 @@ function getNextHeadOffset() {
 
 function moveSnake() {
   counter += 1;
-  if (counter % 4 !== 0) {
+  if (counter % config.speed !== 0) {
     raf = requestAnimationFrame(moveSnake);
     return;
   }
-  const { snake } = config;
+  const { snake, snakeFoodPos } = config;
   let nextPos = getNextHeadOffset();
   config.currentPosSet.clear();
   if (!nextPos) {
@@ -161,6 +208,7 @@ function moveSnake() {
     return;
   }
   config.currentPosSet.add(`${nextPos.row},${nextPos.col}`);
+  let i = 0;
   for (let snakePart of snake) {
     config.currentPosSet.add(`${nextPos.row},${nextPos.col}`);
     const row = parseInt(snakePart.getAttribute("data-dr"));
@@ -170,6 +218,13 @@ function moveSnake() {
     snakePart.setAttribute("data-dr", nextPos.row);
     snakePart.setAttribute("data-dc", nextPos.col);
     nextPos = { row, col };
+    if (
+      i === 0 &&
+      nextPos.row === snakeFoodPos[0] &&
+      nextPos.col === snakeFoodPos[1]
+    ) {
+      handleEat();
+    }
   }
   raf = requestAnimationFrame(moveSnake);
 }

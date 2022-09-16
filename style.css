@@ -8,6 +8,12 @@ body {
   position: relative;
 }
 
+p {
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+}
+
 .snk-brd {
   position: absolute;
   inset: 0;
@@ -15,6 +21,7 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: -1;
+  gap: 1px;
 
   display: grid;
   grid-template-columns: repeat(150, 1fr);
@@ -60,4 +67,52 @@ body {
   --w: 1px;
   width: var(--w);
   height: var(--w);
+}
+
+.snk-fd {
+  display: block;
+  background-color: red;
+  grid-row-end: span 1;
+  grid-column-end: span 1;
+  box-shadow: 0px 0px 17px 14px #ff00003b;
+  animation: breath 1s 0.5s linear alternate infinite;
+}
+
+@keyframes breath {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes highlight {
+  from {
+    scale: 1;
+  }
+
+  50% {
+    scale: 3;
+  }
+
+  to {
+    scale: 1;
+  }
+}
+
+footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+  pointer-events: none;
+  padding: 10px;
+  color: white;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
