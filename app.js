@@ -57,13 +57,13 @@ const config = {
       "1,0": "down",
     },
   },
-  speedIntervals: [5, 10, 15, 20, 25],
+  speedIntervals: [2, 4, 8, 10, 12],
 };
 
 function placeSnakeFood() {
   const { cols, rows, snakeFood } = config;
-  let row = Math.ceil(rows / Math.ceil(Math.random() * 12));
-  let col = Math.ceil(cols / Math.ceil(Math.random() * 12));
+  let row = Math.floor(rows / Math.ceil(Math.random() * 12));
+  let col = Math.floor(cols / Math.ceil(Math.random() * 12));
   config.snakeFoodPos = [row, col];
   snakeFood.style.setProperty("grid-row-start", row);
   snakeFood.style.setProperty("grid-column-start", col);
@@ -146,13 +146,13 @@ function handleEat() {
   config.points += 1;
   pointsCount.textContent = config.points;
   // add one more snake part
-  if (config.points % 2 === 0) {
-    const div = document.createElement("div");
-    div.classList.add(config.snakeCls);
-    div.classList.add(config.snakePartCls);
-    config.snake.push(div);
-    snakeBrd.appendChild(div);
-  }
+  // if (config.points % 2 === 0) {
+  const div = document.createElement("div");
+  div.classList.add(config.snakeCls);
+  div.classList.add(config.snakePartCls);
+  config.snake.push(div);
+  snakeBrd.appendChild(div);
+  // }
   if (config.speed > 1) {
     const pts = config.points;
     console.log(pts);
