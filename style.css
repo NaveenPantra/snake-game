@@ -1,0 +1,63 @@
+:root {
+  --bck-white-alp: #ffffff33;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.snk-brd {
+  position: absolute;
+  inset: 0;
+  background: black;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+
+  display: grid;
+  grid-template-columns: repeat(150, 1fr);
+  grid-template-rows: repeat(150, 1fr);
+}
+
+.header {
+  position: sticky;
+  inset: 0;
+  height: 70px;
+  border-bottom: 1px solid var(--bck-white-alp);
+}
+
+.main {
+  height: 100vh;
+  width: 100vw;
+  /*   background: red; */
+}
+
+.hero-bck-img {
+  /*   border-radius: 5px; */
+  background: #ffffff33;
+}
+
+.snk {
+  background: white;
+  box-shadow: 0 0 4px 3px #ffffff29;
+}
+
+.snk-hd {
+  background-color: red;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.snk-hd::before {
+  content: "";
+  display: block;
+  border-radius: 50%;
+  background-color: black;
+  --w: 1px;
+  width: var(--w);
+  height: var(--w);
+}
