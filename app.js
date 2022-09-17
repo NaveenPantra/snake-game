@@ -1,6 +1,6 @@
 const config = {
-  cols: Math.floor(window.innerWidth / 10),
-  rows: Math.floor(window.innerHeight / 10),
+  cols: Math.floor(window.innerWidth / 16),
+  rows: Math.floor(window.innerHeight / 16),
   snakeLen: 10,
   points: 0,
   speed: 5,
@@ -62,8 +62,8 @@ const config = {
 
 function placeSnakeFood() {
   const { cols, rows, snakeFood } = config;
-  let row = Math.floor(rows / Math.ceil(Math.random() * 12));
-  let col = Math.floor(cols / Math.ceil(Math.random() * 12));
+  let row = Math.floor(Math.random() * (rows - 10) + 5);
+  let col = Math.floor(Math.random() * (cols - 10) + 5);
   config.snakeFoodPos = [row, col];
   snakeFood.style.setProperty("grid-row-start", row);
   snakeFood.style.setProperty("grid-column-start", col);
