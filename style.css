@@ -22,6 +22,26 @@ p {
   font-family: monospace;
 }
 
+a,
+a:hover,
+a:active,
+a:visited {
+  text-decoration: none;
+  color: inherit;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+a span {
+  translate: 0 -1px;
+}
+
+a p {
+  text-decoration: underline;
+}
+
 button {
   padding: 0;
   margin: 0;
@@ -130,21 +150,18 @@ footer {
   bottom: 0;
   left: 0;
   background-color: transparent;
-  pointer-events: none;
+  z-index: 99999;
   padding: 10px;
   color: white;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  gap: 1.5rem;
 }
 
-footer p:first-child {
-  margin-right: 1rem;
-}
-
-footer p:last-child {
-  margin-left: auto;
+footer > p:nth-child(3) {
+  margin-right: auto;
 }
 
 .game-state-container {
