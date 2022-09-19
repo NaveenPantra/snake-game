@@ -14,6 +14,7 @@
   <body>
     <div class="snk-brd"></div>
     <div class="game-state-container">
+      <p class="not-supported hide">May not be supported on your device 📱</p>
       <button class="start-game">Play Game &#9658;</button>
       <button class="pause-game hide">Pause Game 🐍 <span>=</span></button>
     </div>
@@ -34,6 +35,14 @@
         <span>]</span></a
       >
     </footer>
+    <dialog open class="dialog hide">
+      <p class="keyboard-message">
+        Do you have physical keyboard attached to play? This game only supported
+        on keyboard enabled devices and UI layout is not optimized for mobile
+        devices.
+      </p>
+      <button class="keyboard-proceed">Proceed &rarr;</button>
+    </dialog>
     <script src="./app.js"></script>
   </body>
 </html>

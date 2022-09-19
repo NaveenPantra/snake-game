@@ -209,6 +209,44 @@ footer > p:nth-child(3) {
   display: none;
 }
 
+.not-supported {
+  position: fixed;
+  top: 1rem;
+  align-self: center;
+  color: white;
+  justify-self: center;
+}
+
+.dialog {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 275px;
+  height: 120px;
+  border: 5px solid white;
+  background: black;
+  box-shadow: 0 0 0 50vmax black;
+  z-index: 99999;
+  color: white;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 30px;
+  font-size: 1.4rem;
+}
+
+.keyboard-message {
+  grid-column: 1 / -1;
+}
+
+.keyboard-proceed {
+  grid-column: 1 / -1;
+  text-align: center;
+  text-decoration: underline;
+}
+
 @keyframes blink {
   from,
   to {
