@@ -218,6 +218,7 @@ footer > p:nth-child(3) {
 }
 
 .dialog {
+  padding: 2rem;
   margin: 0;
   position: absolute;
   top: 50%;
