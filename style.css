@@ -1,11 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
 :root {
   --bck-white-alp: #ffffff33;
+}
+
+html {
+  font-size: 62.5%;
 }
 
 body {
   margin: 0;
   padding: 0;
   position: relative;
+  background-color: black;
+  font-size: 1.2rem;
 }
 
 p {
@@ -14,14 +22,28 @@ p {
   font-family: monospace;
 }
 
+button {
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  border: none;
+  background-color: transparent;
+  font-family: "VT323", monospace;
+  color: white;
+  cursor: pointer;
+}
+
 .snk-brd {
   position: absolute;
   inset: 0;
   background: black;
-  width: 100vw;
-  height: 100vh;
+  width: calc(100vw - 32px);
+  height: calc(100vh - 32px);
   z-index: -1;
   gap: 1px;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
 
   display: grid;
   grid-template-columns: repeat(150, 1fr);
@@ -114,5 +136,68 @@ footer {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+}
+
+footer p:first-child {
+  margin-right: 1rem;
+}
+
+footer p:last-child {
+  margin-left: auto;
+}
+
+.game-state-container {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-game {
+  font-size: 8rem;
+  text-shadow: -3px -3px red, 2px 2px red, 5px 5px red;
+  align-self: flex-end;
+  animation: blink 0.5s steps(1, end) infinite;
+  display: block;
+  position: relative;
+}
+
+.pause-game {
+  position: fixed;
+  bottom: 0;
+  align-self: flex-end;
+  justify-self: center;
+  padding: 1rem 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.pause-game span {
+  scale: 2;
+  rotate: 90deg;
+  transform-origin: center;
+  translate: 0 1px;
+}
+
+.hide {
+  visibility: hidden;
+  opacity: 0;
+  display: none;
+}
+
+@keyframes blink {
+  from,
+  to {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }

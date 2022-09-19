@@ -1,8 +1,9 @@
 const config = {
-  cols: Math.floor(window.innerWidth / 16),
-  rows: Math.floor(window.innerHeight / 16),
+  cols: Math.floor((window.innerWidth - 32) / 16),
+  rows: Math.floor((window.innerHeight - 32) / 16),
   snakeLen: 10,
   points: 0,
+  lives: 0,
   speed: 5,
   snakeBoard: "snk-brd",
   snakeCls: "snk",
@@ -11,6 +12,10 @@ const config = {
   snakeHeadCls: "snk-hd",
   ptsCount: "pts-count",
   spdCount: "spd-count",
+  deadCount: "dead-count",
+  startGame: "start-game",
+  pauseGame: "pause-game",
+  hide: "hide",
   snake: null,
   snakeFood: null,
   pointsCount: null,
@@ -60,6 +65,25 @@ const config = {
   speedIntervals: [2, 4, 8, 10, 12],
 };
 
+let counter = -1;
+
+let raf = null;
+
+const startGameBtn = document.querySelector(`.${config.startGame}`);
+const pauseGameBtn = document.querySelector(`.${config.pauseGame}`);
+const snakeBrd = document.querySelector(`.${config.snakeBoard}`);
+const pointsCount = document.querySelector(`.${config.ptsCount}`);
+const speedCount = document.querySelector(`.${config.spdCount}`);
+const deadCount = document.querySelector(`.${config.deadCount}`);
+
+startGameBtn.addEventListener("click", toggleStartGame);
+pauseGameBtn.addEventListener("click", toggleStartGame);
+document.body.addEventListener("keydown", handleKeyPress);
+
+pointsCount.textContent = config.points;
+speedCount.textContent = config.speed;
+deadCount.textContent = config.lives;
+
 function placeSnakeFood() {
   const { cols, rows, snakeFood } = config;
   let row = Math.floor(Math.random() * (rows - 10) + 5);
@@ -70,12 +94,6 @@ function placeSnakeFood() {
   snakeFood.setAttribute("data-dr", row);
   snakeFood.setAttribute("data-dc", col);
 }
-
-const snakeBrd = document.querySelector(`.${config.snakeBoard}`);
-const pointsCount = document.querySelector(`.${config.ptsCount}`);
-const speedCount = document.querySelector(`.${config.spdCount}`);
-pointsCount.textContent = config.points;
-speedCount.textContent = config.speed;
 
 function createSnake() {
   const { snakeCls, snakePartCls, snakeHeadCls } = config;
@@ -133,13 +151,18 @@ function setup() {
 
 function handleKeyPress(event) {
   const { headPos, keyCodeToDirMap, cancelDirMap } = config;
+  if (event.code === "Space") {
+    toggleStartGame();
+    return;
+  }
+
+  if (!raf) return;
+
   if (!keyCodeToDirMap[event.code]) return;
   const { dir: currentDir } = headPos;
   if (event.code === cancelDirMap[currentDir]) return;
   headPos.dir = keyCodeToDirMap[event.code];
 }
-
-document.body.addEventListener("keydown", handleKeyPress);
 
 function handleEat() {
   placeSnakeFood();
@@ -155,7 +178,6 @@ function handleEat() {
   // }
   if (config.speed > 1) {
     const pts = config.points;
-    console.log(pts);
     if (pts > config.speedIntervals[3]) {
       config.speed = 1;
     } else if (pts > config.speedIntervals[2]) {
@@ -203,6 +225,9 @@ function moveSnake() {
   config.currentPosSet.clear();
   if (!nextPos) {
     cancelAnimationFrame(raf);
+    raf = null;
+    config.lives += 1;
+    deadCount.textContent = config.lives;
     setup();
     raf = requestAnimationFrame(moveSnake);
     return;
@@ -229,9 +254,18 @@ function moveSnake() {
   raf = requestAnimationFrame(moveSnake);
 }
 
+function toggleStartGame() {
+  if (raf) {
+    cancelAnimationFrame(raf);
+    raf = null;
+    startGameBtn.classList.toggle(config.hide);
+    pauseGameBtn.classList.toggle(config.hide);
+    return;
+  }
+  raf = requestAnimationFrame(moveSnake);
+  startGameBtn.classList.toggle(config.hide);
+  pauseGameBtn.classList.toggle(config.hide);
+}
+
 createSnake();
 setup();
-
-let counter = -1;
-
-let raf = requestAnimationFrame(moveSnake);
