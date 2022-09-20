@@ -1,4 +1,4 @@
-# snake-travel
+# 🐍 Snake Game
 
 Play at https://www.snakegame.life/
 
