@@ -2,6 +2,7 @@
 
 :root {
   --bck-white-alp: #ffffff33;
+  --clp-star: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
 
 html {
@@ -120,6 +121,12 @@ button {
   animation: breath 1s 0.5s linear alternate infinite;
 }
 
+.snk-fd.star-food {
+  clip-path: var(--clp-star);
+  scale: 1.8;
+  animation: rotate360 1.4s ease-in-out alternate infinite;
+}
+
 @keyframes breath {
   from {
     opacity: 1;
@@ -127,6 +134,20 @@ button {
 
   to {
     opacity: 0;
+  }
+}
+
+@keyframes rotate360 {
+  from {
+    rotate: 0deg;
+    scale: 1.3;
+    filter: brightness(1);
+  }
+
+  to {
+    rotate: 360deg;
+    scale: 1.8;
+    filter: brightness(2);
   }
 }
 

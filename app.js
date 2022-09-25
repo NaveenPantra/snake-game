@@ -14,6 +14,7 @@ const config = {
   spdCount: "spd-count",
   deadCount: "dead-count",
   startGame: "start-game",
+  starFood: 'star-food',
   pauseGame: "pause-game",
   dialog: "dialog",
   keyboardProceed: "keyboard-proceed",
@@ -65,6 +66,7 @@ const config = {
     },
   },
   speedIntervals: [2, 4, 8, 10, 12],
+  starFoodOffset: 5,
 };
 
 let counter = -1;
@@ -88,7 +90,7 @@ speedCount.textContent = config.speed;
 deadCount.textContent = config.lives;
 
 function placeSnakeFood() {
-  const { cols, rows, snakeFood } = config;
+  const { cols, rows, snakeFood, points } = config;
   let row = Math.floor(Math.random() * (rows - 10) + 5);
   let col = Math.floor(Math.random() * (cols - 10) + 5);
   config.snakeFoodPos = [row, col];
@@ -96,6 +98,11 @@ function placeSnakeFood() {
   snakeFood.style.setProperty("grid-column-start", col);
   snakeFood.setAttribute("data-dr", row);
   snakeFood.setAttribute("data-dc", col);
+  if (points !== 0 && points % 5 === 0) {
+    snakeFood.classList.add(config.starFood)
+  } else {
+    snakeFood.classList.remove(config.starFood)
+  }
 }
 
 function createSnake() {
@@ -168,7 +175,6 @@ function handleKeyPress(event) {
 }
 
 function handleEat() {
-  placeSnakeFood();
   config.points += 1;
   pointsCount.textContent = config.points;
   // add one more snake part
@@ -192,6 +198,7 @@ function handleEat() {
     }
     speedCount.textContent = config.speed;
   }
+  placeSnakeFood();
 }
 
 function getNextHeadOffset() {
