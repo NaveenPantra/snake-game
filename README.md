@@ -1,8 +1,8 @@
 # 🐍 Snake Game
 
-Play at https://www.snakegame.life/
+Play at https://naveenpantra.github.io/snake-game/ _**or**_ https://www.snakegame.life/
 
-A simple snake game started as matrix animatinon but took different turns and the output was a simple snake game.
+A simple snake game started as matrix animation but took different turns and the output was a simple snake game.
 
 
 # Screenshot
